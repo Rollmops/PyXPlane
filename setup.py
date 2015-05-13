@@ -23,8 +23,9 @@ xplane_module = Extension('xplane._binding',
                                      'XPWidgets_64',
                                      'boost_python3-mgw49-mt-1_56'],
                           define_macros = [('APL', '1'),
-                                           ('__BINDING_VERSION__', __version__),
-                                           ('MS_WIN64', '')],
+                                           ('MS_WIN64', ''),
+                                           ('__BINDING_VERSION__', __version__)
+                                           ],
                           extra_compile_args=['-w', '-Wall'],
                         )
 
