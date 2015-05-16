@@ -19,4 +19,11 @@ cd C:\SDK\boost_1_58_0\tools\build
 bootstrap.bat mingw 
 b2 --prefix=C:\SDK\MinGW64 install
 cd C:\SDK\boost_1_58_0
-b2 --with-python architecture=x86 address-model=64 link=shared variant=release toolset=gcc stage 
+b2 --with-python architecture=x86 address-model=64 link=shared variant=release define=MS_WIN64 toolset=gcc stage 
+
+XPlane API konfigurieren
+========================
+
+cd C:\SDK\XPlane\Libraries\Win
+gendef "D:\SteamLibrary\steamapps\common\X-Plane 10\Resources\plugins\XPLM_64.dll"
+dlltool --dllname "D:\SteamLibrary\steamapps\common\X-Plane 10\Resources\plugins\XPLM_64.dll" --def XPLM_64.def --output-lib libXPLM_64.a
