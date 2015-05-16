@@ -33,5 +33,5 @@ setup(name='xplane',
       packages=find_packages(),
       ext_modules=[xplane_module],
       data_files=[('xplane', glob.glob('lib/*.dll'))],
-      zip_safe=True
+      zip_safe=False
       )
