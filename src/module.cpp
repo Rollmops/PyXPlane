@@ -7,7 +7,7 @@ using namespace boost::python;
 
 BOOST_PYTHON_MODULE(_binding)
 {
-	scope().attr("__version__") = std::string(xstr(__BINDING_VERSION__));
+	scope().attr("__version__") = std::string(xstr(__EXTENSION_VERSION__));
 
 	def("XPLMFindDataRef", __XPLMFindDataRef);
 
