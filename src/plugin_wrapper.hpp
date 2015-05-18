@@ -6,11 +6,12 @@
  */
 
 #include <boost/python.hpp>
+#include <boost/function.hpp>
 #include <XPLMPlugin.h>
 
-using namespace boost::python;
+using namespace boost;
 
-void __XPLMEnumerateFeatures(const object &inEnumerator, const object &inRef);
+void __XPLMEnumerateFeatures(const python::object &inEnumerator, const python::object &inRef);
 
 
 #endif //_PYXPLANE_PLUGIN_WRAPPER_HPP

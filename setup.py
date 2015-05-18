@@ -2,7 +2,7 @@ import os
 import glob
 from setuptools import setup, Extension, find_packages
 from xplane import __version__
-from cmake_build_command import CmakeBuildCommand
+from external_tools_build_command import ExternalToolsBuildCommand
 
 BOOST_DIR = os.environ.get('BOOST_DIR', r'C:\SDK\boost_1_56_0')
 BOOST_LIBRARY_DIR = os.path.join(BOOST_DIR, 'stage', 'lib')
@@ -31,13 +31,13 @@ xplane_module = Extension('xplane.api',
                           extra_compile_args=['-w', '-Wall'],
                         )
 
-CmakeBuildCommand.BOOST_DIR = BOOST_DIR
+ExternalToolsBuildCommand.BOOST_DIR = BOOST_DIR
 setup(name='xplane',
       version=__version__,
       packages=find_packages(),
       ext_modules=[xplane_module],
       data_files=[('xplane', glob.glob('lib/*.dll'))],
       zip_safe=False,
-      cmdclass = {'external': CmakeBuildCommand }
+      cmdclass = {'external': ExternalToolsBuildCommand }
       )
 
