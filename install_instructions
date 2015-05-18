@@ -19,7 +19,7 @@ cd C:\SDK\boost_1_58_0\tools\build
 bootstrap.bat mingw 
 b2 --prefix=C:\SDK\MinGW64 install
 cd C:\SDK\boost_1_58_0
-b2 --with-python architecture=x86 address-model=64 link=shared variant=release define=MS_WIN64 toolset=gcc stage 
+b2 --with-python --with-regex --with-filesystem architecture=x86 address-model=64 link=shared,static variant=release define=MS_WIN64 toolset=gcc stage 
 
 XPlane API konfigurieren
 ========================
