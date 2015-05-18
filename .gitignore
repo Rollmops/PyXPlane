@@ -3,3 +3,4 @@
 /xplane.egg-info/
 /.pydevproject
 /.project
+*__pycache__
