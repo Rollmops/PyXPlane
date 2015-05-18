@@ -10,7 +10,7 @@ XPLANE_SDK_DIR = os.environ.get('XPLANE_SDK_DIR', r'C:\SDK\XPlane')
 XPLANE_SDK_HEADER_DIR = os.path.join(XPLANE_SDK_DIR, 'CHeaders')
 XPLANE_SDK_LIBRARY_DIR = os.path.join(XPLANE_SDK_DIR, 'Libraries', 'Win')
 
-xplane_module = Extension('xplane._binding',
+xplane_module = Extension('xplane.api',
                           sources=glob.glob('src/*.cpp'),
                           include_dirs=[os.path.join(XPLANE_SDK_HEADER_DIR, 'XPLM'),
                                         os.path.join(XPLANE_SDK_HEADER_DIR, 'Widgets'),
