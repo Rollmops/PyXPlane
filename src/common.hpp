@@ -4,3 +4,5 @@
 #define str(s) #s
 
 #define DEF_FUNCTION(NAME) def(xstr(NAME), NAME, NAME ## _doc)
+
+#define SCOPE_ATTR(NAME) scope().attr(xstr(NAME)) = NAME
