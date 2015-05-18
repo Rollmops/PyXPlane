@@ -3,13 +3,18 @@ cmake_minimum_required(VERSION 2.6.8)
 project(xplane_script_loader)
 
 find_package(PythonLibs 3.4 REQUIRED)
-find_package(Boost REQUIRED COMPONENTS filesystem system regex )
+find_package(Boost REQUIRED COMPONENTS python filesystem system regex )
 
 include_directories(${PYTHON_INCLUDE_DIRS})
 include_directories(${Boost_INCLUDE_DIRS})
+include_directories(${XPLM_INCLUDE_DIR})
 
-add_library(script_loader SHARED tools/script_loader.cpp ) 
-target_link_libraries(script_loader  ${Boost_LIBRARIES} ${PYTHON_LIBRARIES})
+add_library(win SHARED tools/script_loader.cpp ) 
 
-SET_TARGET_PROPERTIES(script_loader PROPERTIES SUFFIX .xpl)
-SET_TARGET_PROPERTIES(script_loader PROPERTIES PREFIX "")
+find_library(XPLM_LIB XPLM_64 C:/SDK/XPlane/Libraries/Win)
+target_link_libraries(win ${Boost_LIBRARIES} ${PYTHON_LIBRARIES} ${XPLM_LIB})
+
+SET_TARGET_PROPERTIES(win PROPERTIES SUFFIX .xpl)
+SET_TARGET_PROPERTIES(win PROPERTIES PREFIX "")
+
+install(TARGETS win DESTINATION "E:/SteamLibrary/steamapps/common/X-Plane 10/Resources/plugins/PythonTest/64")

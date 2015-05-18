@@ -11,6 +11,8 @@ XPLANE_SDK_DIR = os.environ.get('XPLANE_SDK_DIR', r'C:\SDK\XPlane')
 XPLANE_SDK_HEADER_DIR = os.path.join(XPLANE_SDK_DIR, 'CHeaders')
 XPLANE_SDK_LIBRARY_DIR = os.path.join(XPLANE_SDK_DIR, 'Libraries', 'Win')
 
+XPLANE_PLATFORM = 'IBM'
+
 xplane_module = Extension('xplane.api',
                           sources=glob.glob('src/*.cpp'),
                           include_dirs=[os.path.join(XPLANE_SDK_HEADER_DIR, 'XPLM'),
@@ -22,7 +24,7 @@ xplane_module = Extension('xplane.api',
                                         BOOST_LIBRARY_DIR],
                           libraries=['XPLM_64',
                                      'boost_python3-mgw49-mt-1_56'],
-                          define_macros = [('APL', None),
+                          define_macros = [(XPLANE_PLATFORM, None),
                                            ('MS_WIN64', None),
                                            ('XPLM200', None),
                                            ('XPLM210', None),
@@ -32,6 +34,9 @@ xplane_module = Extension('xplane.api',
                         )
 
 ExternalToolsBuildCommand.BOOST_DIR = BOOST_DIR
+ExternalToolsBuildCommand.XPLM_INCLUDE_DIR = os.path.join(XPLANE_SDK_HEADER_DIR, 'XPLM')
+ExternalToolsBuildCommand.PLATFORM = XPLANE_PLATFORM
+
 setup(name='xplane',
       version=__version__,
       packages=find_packages(),
