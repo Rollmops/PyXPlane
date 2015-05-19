@@ -8,9 +8,9 @@ class ExternalToolsBuildCommand(Command):
     XPLM_INCLUDE_DIR = None
     PLATFORM = 'APL'
 
-    user_options = []
+    user_options = [('install', None, 'install to X-Planes plugin directory')]
     def initialize_options(self):
-        pass
+        self.install = False
         
     def finalize_options(self):
         pass
@@ -31,4 +31,7 @@ class ExternalToolsBuildCommand(Command):
         
         subprocess.check_call(command)
         
-        subprocess.check_call(['mingw32-make', 'install'])
+        make_command = ['mingw32-make']
+        if self.install:
+            make_command.append('install')
+        subprocess.check_call(make_command)
