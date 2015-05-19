@@ -2,7 +2,10 @@
 #include "common.hpp"
 
 #include "plugin_wrapper.hpp"
-#include "docstrings.hpp"
+#include "dataaccess_wrapper.hpp"
+
+#include "plugin_docstrings.hpp"
+#include "dataaccess_docstrings.hpp"
 
 using namespace boost::python;
 
@@ -41,4 +44,12 @@ BOOST_PYTHON_MODULE(api)
 	DEF_FUNCTION(XPLMIsFeatureEnabled);
 	DEF_FUNCTION(XPLMEnableFeature);
 	def("XPLMEnumerateFeatures", __XPLMEnumerateFeatures, XPLMEnumerateFeatures_doc);
+
+	/***********************************************************************
+	 *						XPLMDataRef
+	 ***********************************************************************/
+
+	DEF_FUNCTION(XPLMCanWriteDataRef);
+	DEF_FUNCTION(XPLMGetDataRefTypes);
+
 }
