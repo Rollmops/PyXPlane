@@ -15,7 +15,8 @@ Source: "lib\libboost*.dll"; DestDir: "{app}\Resources\plugins\PyXPlane\64"
 [Code]
 procedure OnDirEditChange(Sender: TObject);
 begin
-  WizardForm.NextButton.Enabled := DirExists(AddBackslash(WizardDirValue) + 'Resources');
+  WizardForm.NextButton.Enabled := DirExists(AddBackslash(WizardDirValue) + 'Resources')
+    and FileExists(AddBackslash(WizardDirValue) + 'X-Plane.exe');
 end;
 
 procedure CurPageChanged(CurPageID: Integer);
