@@ -9,13 +9,13 @@ AlwaysShowDirOnReadyPage=no
 DirExistsWarning=no
 
 [Files]
-Source: "setup.py"; DestDir: {app}
-Source: "TODOs"; DestDir: {app}
+Source: "build\win.xpl"; DestDir: "{app}\Resources\plugins\PyXPlane\64"
+Source: "lib\libboost*.dll"; DestDir: "{app}\Resources\plugins\PyXPlane\64"
 
 [Code]
 procedure OnDirEditChange(Sender: TObject);
 begin
-  WizardForm.NextButton.Enabled := FileExists(AddBackslash(WizardDirValue) + 'huhu.txt');
+  WizardForm.NextButton.Enabled := DirExists(AddBackslash(WizardDirValue) + 'Resources');
 end;
 
 procedure CurPageChanged(CurPageID: Integer);
