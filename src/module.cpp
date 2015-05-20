@@ -9,6 +9,7 @@
 
 using namespace boost::python;
 
+
 BOOST_PYTHON_MODULE(api)
 {
 	scope().attr("__version__") = std::string(xstr(__EXTENSION_VERSION__));
@@ -43,7 +44,8 @@ BOOST_PYTHON_MODULE(api)
 	DEF_FUNCTION(XPLMHasFeature);
 	DEF_FUNCTION(XPLMIsFeatureEnabled);
 	DEF_FUNCTION(XPLMEnableFeature);
-	def("XPLMEnumerateFeatures", __XPLMEnumerateFeatures, XPLMEnumerateFeatures_doc);
+
+	def("XPLMEnumerateFeatures", __XPLMEnumerateFeatures, __XPLMEnumerateFeatures_overloads(args("inEnumerator", "inRef"), XPLMEnumerateFeatures_doc));
 
 	/***********************************************************************
 	 *						XPLMDataRef
