@@ -1,5 +1,6 @@
 #include <iostream>
 #include <fstream>
+#include <list>
 
 #include <Python.h>
 
@@ -7,6 +8,7 @@
 #include <boost/filesystem.hpp>
 #include <boost/regex.hpp>
 #include <boost/thread.hpp>
+#include <boost/foreach.hpp>
 
 #include <XPLMDefs.h>
 #include <XPLMUtilities.h>
@@ -18,35 +20,26 @@
 #error "__PLUGIN_SCRIPTS_DIR_NAME__ not defined"
 #endif
 
+static std::list<boost::shared_ptr<boost::thread> > threadList;
+
 void run_script(const boost::filesystem::path &p)
 {
-	Py_Initialize();
-	FILE *file = fopen(p.string().c_str(), "r");
-	if (file != NULL) {
-		fseek(file, 0, SEEK_END);
-		const long length = ftell(file);
-		fseek(file, 0, SEEK_SET);
-		char *buffer = (char*)malloc(length);
-		if(buffer) {
-			fread(buffer, 1 , length, file);
-		}
-		fclose(file);
-		std::stringstream strstream;
-		strstream << "Loading python script: " << p.string()
-				<< std::endl;
+	std::ifstream python_file(p.string().c_str());
+	if( python_file.is_open()) {
+		Py_Initialize();
+		std::string python_code((std::istreambuf_iterator<char>(python_file)),
+		                 std::istreambuf_iterator<char>());
 
-		const int retval = PyRun_SimpleString(buffer);
-
+		const int retval = PyRun_SimpleString(python_code.c_str());
+		std::stringstream resultMsg;
 		if (retval != 0) {
-			std::stringstream errorMsg;
-			errorMsg << "Python script returned code: " << retval << "(" <<  buffer << ")" << std::endl;
-			XPLMDebugString(errorMsg.str().c_str());
+			resultMsg << "PyXPlane: ERROR! Python script [" << p.string() << "] returned code: " << retval << std::endl;
+			XPLMDebugString(resultMsg.str().c_str());
+		} else {
+			resultMsg << "PyXPlane: Python script [" << p.string() << "] exited with no error" << std::endl;
 		}
-		XPLMDebugString("Done\n");
-
-//		free(buffer);
+		Py_Finalize();
 	}
-	Py_Finalize();
 }
 
 
@@ -56,14 +49,15 @@ void run_scripts(const boost::filesystem::path &p) {
 	if (!boost::filesystem::is_directory(p)) {
 		if (boost::regex_match(p.leaf().string(), filePattern))
 		{
-			std::stringstream strstream;
-			strstream << "Loading python script: " << p.string()
-							<< std::endl;
-			XPLMDebugString(strstream.str().c_str());
-			boost::thread script_thread(run_script, p);
+			std::stringstream debugOut1;
+			debugOut1 << "PyXPlane: Loading python script [" << p.string() << "]" << std::endl;
+			XPLMDebugString(debugOut1.str().c_str());
+
+			threadList.push_back( boost::shared_ptr<boost::thread>(new boost::thread(run_script, p)) );
 		}
 	}
 }
+
 
 PLUGIN_API int XPluginStart(char *outName, char *outSig, char *outDesc) {
 	strcpy(outName, "PythonScriptLoader");
@@ -78,8 +72,6 @@ PLUGIN_API int XPluginStart(char *outName, char *outSig, char *outDesc) {
 	workingDir /= xstr(__PLUGIN_SCRIPTS_DIR_NAME__);
 	workingDir /= "Scripts";
 
-//	filesystem::current_path(workingDir);
-
 	if (boost::filesystem::exists(workingDir)) {
 		for (boost::filesystem::directory_iterator itr(workingDir);
 				itr != boost::filesystem::directory_iterator(); ++itr) {
@@ -89,23 +81,28 @@ PLUGIN_API int XPluginStart(char *outName, char *outSig, char *outDesc) {
 	}
 	return 1;
 }
-//int main() {
-//
-//	filesystem::path workingDir = filesystem::path(
-//			boost::filesystem::current_path());
-//	workingDir /= "Resources";
-//	workingDir /= "plugins";
-//	workingDir /= xstr(__PLUGIN_SCRIPTS_DIR_NAME__);
-//	workingDir /= "Scripts";
-//
-//	//	filesystem::current_path(workingDir);
-//
-//	if (filesystem::exists(workingDir)) {
-//		for (filesystem::directory_iterator itr(workingDir);
-//				itr != filesystem::directory_iterator(); ++itr) {
-//			run_scripts(*itr);
-//
-//		}
-//	}
-//	return 1;
-//}
+
+PLUGIN_API void	XPluginStop(void)
+{
+	BOOST_FOREACH(std::list<boost::shared_ptr<boost::thread> >::const_reference t, threadList)
+	{
+
+	}
+}
+
+PLUGIN_API void XPluginDisable(void)
+{
+}
+
+PLUGIN_API int XPluginEnable(void)
+{
+	return 1;
+}
+
+PLUGIN_API void XPluginReceiveMessage(
+					XPLMPluginID	inFromWho,
+					long			inMessage,
+					void *			inParam)
+{
+}
+

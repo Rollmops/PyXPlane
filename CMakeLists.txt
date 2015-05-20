@@ -11,11 +11,9 @@ include_directories(${XPLM_INCLUDE_DIR})
 include_directories(src)
 
 add_library(win SHARED tools/script_loader.cpp ) 
-#add_executable(win_exe tools/script_loader.cpp)
 
 find_library(XPLM_LIB XPLM_64 C:/SDK/XPlane/Libraries/Win)
 target_link_libraries(win ${Boost_LIBRARIES} ${PYTHON_LIBRARIES} ${XPLM_LIB})
-#target_link_libraries(win_exe ${Boost_LIBRARIES} ${PYTHON_LIBRARIES} ${XPLM_LIB})
 
 SET_TARGET_PROPERTIES(win PROPERTIES SUFFIX .xpl)
 SET_TARGET_PROPERTIES(win PROPERTIES PREFIX "")
