@@ -23,7 +23,7 @@ BOOST_PYTHON_MODULE(api)
 	DEF_FUNCTION(XPLMGetNthPlugin);
 	DEF_FUNCTION(XPLMFindPluginByPath);
 	DEF_FUNCTION(XPLMFindPluginBySignature);
-	DEF_FUNCTION(XPLMGetPluginInfo);
+	def("XPLMGetPluginInfo", __XPLMGetPluginInfo, XPLMGetPluginInfo_doc);
 
 	DEF_FUNCTION(XPLMIsPluginEnabled);
 	DEF_FUNCTION(XPLMEnablePlugin);
