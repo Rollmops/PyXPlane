@@ -12,6 +12,7 @@ XPLANE_SDK_HEADER_DIR = os.path.join(XPLANE_SDK_DIR, 'CHeaders')
 XPLANE_SDK_LIBRARY_DIR = os.path.join(XPLANE_SDK_DIR, 'Libraries', 'Win')
 
 XPLANE_PLATFORM = 'IBM'
+PLUGIN_SCRIPTS_DIR_NAME = 'PyXPlane'
 
 xplane_module = Extension('xplane.api',
                           sources=glob.glob('src/*.cpp'),
@@ -36,6 +37,7 @@ xplane_module = Extension('xplane.api',
 ExternalToolsBuildCommand.BOOST_DIR = BOOST_DIR
 ExternalToolsBuildCommand.XPLM_INCLUDE_DIR = os.path.join(XPLANE_SDK_HEADER_DIR, 'XPLM')
 ExternalToolsBuildCommand.PLATFORM = XPLANE_PLATFORM
+ExternalToolsBuildCommand.PLUGIN_SCRIPTS_DIR_NAME = PLUGIN_SCRIPTS_DIR_NAME
 
 setup(name='xplane',
       version=__version__,

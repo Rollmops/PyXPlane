@@ -11,6 +11,7 @@ DirExistsWarning=no
 [Files]
 Source: "build\win.xpl"; DestDir: "{app}\Resources\plugins\PyXPlane\64"
 Source: "lib\libboost*.dll"; DestDir: "{app}\Resources\plugins\PyXPlane\64"
+Source: "scripts\*.py"; DestDir: "{app}\Resources\plugins\PyXPlane\Scripts"
 
 [Code]
 procedure OnDirEditChange(Sender: TObject);

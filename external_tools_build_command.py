@@ -7,6 +7,7 @@ class ExternalToolsBuildCommand(Command):
     BOOST_DIR = None
     XPLM_INCLUDE_DIR = None
     PLATFORM = 'APL'
+    PLUGIN_SCRIPTS_DIR_NAME = None
 
     user_options = [('install', None, 'install to X-Planes plugin directory')]
     def initialize_options(self):
@@ -27,7 +28,8 @@ class ExternalToolsBuildCommand(Command):
         command.append('-DBoost_FILESYSTEM_LIBRARY_RELEASE={0}'.format(os.path.join(boost_library_dir, 'libboost_filesystem-mgw49-mt-1_56.a')))
         command.append('-DBoost_SYSTEM_LIBRARY_RELEASE={0}'.format(os.path.join(boost_library_dir, 'libboost_system-mgw49-mt-1_56.a')))
         command.append('-DXPLM_INCLUDE_DIR={0}'.format(ExternalToolsBuildCommand.XPLM_INCLUDE_DIR))
-        command.append('-DCMAKE_CXX_FLAGS=-D{0}'.format(ExternalToolsBuildCommand.PLATFORM))
+        command.append('-DCMAKE_CXX_FLAGS=-D{0} -D__PLUGIN_SCRIPTS_DIR_NAME__={1}'.format(ExternalToolsBuildCommand.PLATFORM,
+                                                                                         ExternalToolsBuildCommand.PLUGIN_SCRIPTS_DIR_NAME))
         
         subprocess.check_call(command)
         
