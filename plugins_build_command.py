@@ -27,6 +27,7 @@ class PluginsBuildCommand(Command):
         command.append('-DBoost_REGEX_LIBRARY_RELEASE={0}'.format(os.path.join(boost_library_dir, 'libboost_regex-mgw49-mt-1_56.a')))
         command.append('-DBoost_FILESYSTEM_LIBRARY_RELEASE={0}'.format(os.path.join(boost_library_dir, 'libboost_filesystem-mgw49-mt-1_56.a')))
         command.append('-DBoost_SYSTEM_LIBRARY_RELEASE={0}'.format(os.path.join(boost_library_dir, 'libboost_system-mgw49-mt-1_56.a')))
+        command.append('-DBoost_THREAD_LIBRARY_RELEASE={0}'.format(os.path.join(boost_library_dir, 'libboost_thread-mgw49-mt-1_56.a')))
         command.append('-DXPLM_INCLUDE_DIR={0}'.format(PluginsBuildCommand.XPLM_INCLUDE_DIR))
         command.append('-DCMAKE_CXX_FLAGS=-D{0} -D__PLUGIN_SCRIPTS_DIR_NAME__={1}'.format(PluginsBuildCommand.PLATFORM,
                                                                                          PluginsBuildCommand.PLUGIN_SCRIPTS_DIR_NAME))
