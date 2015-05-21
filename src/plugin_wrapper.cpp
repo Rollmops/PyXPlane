@@ -37,3 +37,9 @@ boost::python::tuple __XPLMGetPluginInfo(const XPLMPluginID &inPlugin )
 										NONE_OR_STRING(outDescription));
 }
 
+
+void __XPLMSendMessageToPlugin(const XPLMPluginID &inPlugin, const int &inMessage, const boost::python::object &inParam)
+{
+	XPLMSendMessageToPlugin(inPlugin, inMessage, PyCapsule_GetPointer(inParam.ptr(), "inParam"));
+}
+

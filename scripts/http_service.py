@@ -1,4 +1,4 @@
-from xplane import api
+from xplane import api  # @UnresolvedImport
 from flask import Flask, jsonify
 
 app = Flask(__name__)
@@ -19,13 +19,11 @@ def XPLMCountPlugins():
 
 @app.route('/api/v1.0/XPLMGetNthPlugin/<int:index>')
 def XPLMGetNthPlugin(index):
-    print(index)
     return jsonify(result=api.XPLMGetNthPlugin(index))  # @UndefinedVariable
 
 
 @app.route('/api/v1.0/XPLMFindPluginByPath/<path:path>')
 def XPLMFindPluginByPath(path):
-    print(path)
     return jsonify(result=api.XPLMFindPluginByPath(path))  # @UndefinedVariable
 
 

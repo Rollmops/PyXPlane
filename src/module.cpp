@@ -30,7 +30,7 @@ BOOST_PYTHON_MODULE(api)
 	DEF_FUNCTION(XPLMDisablePlugin);
 	DEF_FUNCTION(XPLMReloadPlugins);
 
-	DEF_FUNCTION(XPLMSendMessageToPlugin);
+	def("XPLMSendMessageToPlugin", __XPLMSendMessageToPlugin, __XPLMSendMessageToPlugin_overloads(args("inPlugin", "inMessage", "inParam"), XPLMSendMessageToPlugin_doc));
 
 	SCOPE_ATTR(XPLM_MSG_PLANE_CRASHED);
 	SCOPE_ATTR(XPLM_MSG_PLANE_LOADED);
