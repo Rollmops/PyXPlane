@@ -6,12 +6,12 @@ class PluginsBuildCommand(Command):
     
     BOOST_DIR = None
     XPLM_INCLUDE_DIR = None
-    PLATFORM = 'APL'
+    PLATFORM = None
     PLUGIN_SCRIPTS_DIR_NAME = None
 
-    user_options = [('install', None, 'install to X-Planes plugin directory')]
+    user_options = []
     def initialize_options(self):
-        self.install = False
+        pass
         
     def finalize_options(self):
         pass
@@ -30,10 +30,7 @@ class PluginsBuildCommand(Command):
         command.append('-DXPLM_INCLUDE_DIR={0}'.format(PluginsBuildCommand.XPLM_INCLUDE_DIR))
         command.append('-DCMAKE_CXX_FLAGS=-D{0} -D__PLUGIN_SCRIPTS_DIR_NAME__={1}'.format(PluginsBuildCommand.PLATFORM,
                                                                                          PluginsBuildCommand.PLUGIN_SCRIPTS_DIR_NAME))
-        
         subprocess.check_call(command)
         
         make_command = ['mingw32-make']
-        if self.install:
-            make_command.append('install')
         subprocess.check_call(make_command)
