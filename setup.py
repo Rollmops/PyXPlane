@@ -2,7 +2,7 @@ import os
 import glob
 from setuptools import setup, Extension, find_packages
 from xplane import __version__
-from external_tools_build_command import ExternalToolsBuildCommand
+from plugins_build_command import PluginsBuildCommand
 
 BOOST_DIR = os.environ.get('BOOST_DIR', r'C:\SDK\boost_1_56_0')
 BOOST_LIBRARY_DIR = os.path.join(BOOST_DIR, 'stage', 'lib')
@@ -34,10 +34,10 @@ xplane_module = Extension('xplane.api',
                           extra_compile_args=['-w', '-Wall'],
                         )
 
-ExternalToolsBuildCommand.BOOST_DIR = BOOST_DIR
-ExternalToolsBuildCommand.XPLM_INCLUDE_DIR = os.path.join(XPLANE_SDK_HEADER_DIR, 'XPLM')
-ExternalToolsBuildCommand.PLATFORM = XPLANE_PLATFORM
-ExternalToolsBuildCommand.PLUGIN_SCRIPTS_DIR_NAME = PLUGIN_SCRIPTS_DIR_NAME
+PluginsBuildCommand.BOOST_DIR = BOOST_DIR
+PluginsBuildCommand.XPLM_INCLUDE_DIR = os.path.join(XPLANE_SDK_HEADER_DIR, 'XPLM')
+PluginsBuildCommand.PLATFORM = XPLANE_PLATFORM
+PluginsBuildCommand.PLUGIN_SCRIPTS_DIR_NAME = PLUGIN_SCRIPTS_DIR_NAME
 
 setup(name='xplane',
       version=__version__,
@@ -46,6 +46,6 @@ setup(name='xplane',
       data_files=[('xplane', glob.glob('lib/*.dll'))],
       zip_safe=False,
       install_requires=['flask'],
-      cmdclass = {'external': ExternalToolsBuildCommand }
+      cmdclass = {'plugins': PluginsBuildCommand }
       )
 
