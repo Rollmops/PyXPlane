@@ -9,3 +9,22 @@ const char *XPLMCanWriteDataRef_doc = 	"Given a data ref, this routine returns t
 
 const char *XPLMGetDataRefTypes_doc = 	"This routine returns the types of the data ref for accessor use."
 										"If a data ref is available in multiple data types, they will all be returned.";
+
+
+const char *XPLMGetDatai_doc = 	"Read an integer data ref and return its value."
+								"The return value is the dataref value or 0 if the dataref is invalid/NULL or the plugin is disabled.";
+
+const char *XPLMGetDataf_doc = 	"Read a single precision floating point dataref and return its value."""
+								"The return value is the dataref value or 0.0 if the dataref is invalid/NULL or the plugin is disabled.";
+
+const char *XPLMGetDatad_doc =	"Read a double precision floating point dataref and return its value."
+								"The return value is the dataref value or 0.0 if the dataref is invalid/NULL or the plugin is disabled.";
+
+const char *XPLMSetDatai_doc =	"Write a new value to an integer data ref."
+								"This routine is a no-op if the plugin publishing the dataref is disabled, the dataref is invalid, or the dataref is not writable.";
+
+const char *XPLMSetDataf_doc =	"Write a new value to a single precision floating point data ref."
+								"This routine is a no-op if the plugin publishing the dataref is disabled, the dataref is invalid, or the dataref is not writable.";
+
+const char *XPLMSetDatad_doc = 	"Write a new value to a double precision floating point data ref."
+								"This routine is a no-op if the plugin publishing the dataref is disabled, the dataref is invalid, or the dataref is not writable.";

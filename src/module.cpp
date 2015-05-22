@@ -63,4 +63,20 @@ BOOST_PYTHON_MODULE(api)
 	def("XPLMCanWriteDataRef", __XPLMCanWriteDataRef, XPLMCanWriteDataRef_doc);
 	def("XPLMGetDataRefTypes", __XPLMGetDataRefTypes, XPLMGetDataRefTypes_doc);
 
+	// data accessors
+	def("XPLMGetDatai", __XPLMGetDatai, XPLMGetDatai_doc);
+	def("XPLMGetDataf", __XPLMGetDataf, XPLMGetDataf_doc);
+	def("XPLMGetDatad", __XPLMGetDatad, XPLMGetDatad_doc);
+
+	def("XPLMSetDatai", __XPLMSetDatai, XPLMSetDatai_doc);
+	def("XPLMSetDataf", __XPLMSetDataf, XPLMSetDataf_doc);
+	def("XPLMSetDatad", __XPLMSetDatad, XPLMSetDatad_doc);
+
+	def("XPLMGetDatavi", __XPLMGetDatavi);
+	def("XPLMGetDatavf", __XPLMGetDatavf);
+	def("XPLMGetDatab", __XPLMGetDatab);
+
+	def("XPLMSetDatavi", __XPLMSetDatavi);
+	def("XPLMSetDatavf", __XPLMSetDatavf);
+	def("XPLMSetDatab", __XPLMSetDatab);
 }
