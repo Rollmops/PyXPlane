@@ -9,9 +9,9 @@
 
 using namespace boost::python;
 
-
 BOOST_PYTHON_MODULE(api)
 {
+
 	scope().attr("__version__") = std::string(xstr(__EXTENSION_VERSION__));
 
 	/***********************************************************************
@@ -51,7 +51,16 @@ BOOST_PYTHON_MODULE(api)
 	 *						XPLMDataRef
 	 ***********************************************************************/
 
-	DEF_FUNCTION(XPLMCanWriteDataRef);
-	DEF_FUNCTION(XPLMGetDataRefTypes);
+	SCOPE_ATTR(xplmType_Unknown);
+	SCOPE_ATTR(xplmType_Int);
+	SCOPE_ATTR(xplmType_Float);
+	SCOPE_ATTR(xplmType_Double);
+	SCOPE_ATTR(xplmType_FloatArray);
+	SCOPE_ATTR(xplmType_IntArray);
+	SCOPE_ATTR(xplmType_Data);
+
+	def("XPLMFindDataRef", __XPLMFindDataRef, XPLMFindDataRef_doc);
+	def("XPLMCanWriteDataRef", __XPLMCanWriteDataRef, XPLMCanWriteDataRef_doc);
+	def("XPLMGetDataRefTypes", __XPLMGetDataRefTypes, XPLMGetDataRefTypes_doc);
 
 }
