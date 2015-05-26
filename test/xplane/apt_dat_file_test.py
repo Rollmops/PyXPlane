@@ -19,9 +19,8 @@ class Test(unittest.TestCase):
         ax = fig.add_subplot(111)
         ax.set_xlim(51.11, 51.15)
         ax.set_ylim(13.75, 13.79)
-        for path in apt_dat.data['taxiways'][:1]:
-            patch = patches.PathPatch(path[1], facecolor='orange', lw=2)
-            print(path)
+        for path in apt_dat.data['taxiways']:
+            patch = patches.PathPatch(path[1], facecolor='orange', lw=3)
             ax.add_patch(patch)
         pyplot.show() 
         

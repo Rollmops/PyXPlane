@@ -57,13 +57,9 @@ void __XPLMSetDatab(PyObject *inDataRef, const char *inValue, int inOffset, int 
 
 static std::map<XPLMDataRef, DataAccessorCallbacks> callbackMap;
 
-REGISTER_GETTER_CALLBACK(int, inReadInt);
-REGISTER_GETTER_CALLBACK(float, inReadFloat);
-REGISTER_GETTER_CALLBACK(double, inReadDouble);
-
 
 PyObject *__XPLMRegisterDataAccessor(
-                                   const std::string         &inDataName,
+                                   const char *inDataName,
                                    XPLMDataTypeID       inDataType,
                                    int                  inIsWritable,
 								   boost::python::object       inReadInt,
@@ -82,18 +78,18 @@ PyObject *__XPLMRegisterDataAccessor(
                                    PyObject *               inWriteRefcon)
 {
 	XPLMDataRef ref = XPLMRegisterDataAccessor(inDataName, inDataType, inIsWritable,
-			NULL_OR_CALLBACK(inReadInt),
-			NULL_OR_CALLBACK(inWriteInt),
-			NULL_OR_CALLBACK(inReadFloat),
-			NULL_OR_CALLBACK(inWriteFloat),
-			NULL_OR_CALLBACK(inReadDouble),
-			NULL_OR_CALLBACK(inWriteDouble),
-			NULL_OR_CALLBACK(inReadIntArray),
-			NULL_OR_CALLBACK(inWriteIntArray),
-			NULL_OR_CALLBACK(inReadFloatArray),
-			NULL_OR_CALLBACK(inWriteFloattArray),
-			NULL_OR_CALLBACK(inReadData),
-			NULL_OR_CALLBACK(inWriteData),
+			NULL,
+			NULL,
+			NULL,
+			NULL,
+			NULL,
+			NULL,
+			NULL,
+			NULL,
+			NULL,
+			NULL,
+			NULL,
+			NULL,
 			PyCapsule_GetPointer(inReadRefcon, "XPLMDataRef"),
 			PyCapsule_GetPointer(inWriteRefcon, "XPLMDataRef") );
 

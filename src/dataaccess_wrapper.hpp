@@ -91,8 +91,6 @@ PyObject *__XPLMRegisterDataAccessor(
                                    PyObject *               inWriteRefcon);
 
 
-#define NULL_OR_CALLBACK(CALLBACK) CALLBACK == boost::python::object() ? NULL : CALLBACK ## _callback
-
 struct DataAccessorCallbacks
 {
 	boost::python::object	inReadInt;
@@ -109,10 +107,5 @@ struct DataAccessorCallbacks
 	boost::python::object	inWriteData;
 };
 
-#define REGISTER_GETTER_CALLBACK(TYPE, NAME) TYPE NAME ## _callback ( void * inRefCon ) \
-{\
-	DataAccessorCallbacks &callback = callbackMap.at(inRefCon); \
-	return callback.NAME (PyCapsule_New(inRefCon, "XPLMDataRef", NULL)); \
-}
 
 #endif // _PYXPLANE_DATAACCESS_WRAPPER_HPP

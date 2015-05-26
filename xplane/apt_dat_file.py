@@ -31,7 +31,8 @@ class AptDatFile:
         
         self.structure_definition = {1: self._parse_data_fields,
                                      100: self._parse_data_fields,
-                                     120: self._parse_taxiway}
+                                     120: self._parse_taxiway,
+                                     110: self._parse_taxiway}
         
         self.filename = filename
         self.line_pattern = re.compile(r'^(\d+)\s+(.*)')
@@ -99,9 +100,9 @@ class AptDatFile:
             elif row == '112':
                 _points = points_to_tuple(points)
                 codes.append(Path.CURVE3)
-                verts.append(_points[:2])
+                verts.append((_points[0], _points[1]))
                 codes.append(Path.CURVE3)
-                verts.append(_points[2:4])
+                verts.append((_points[2], _points[3]))
             
         codes.append(Path.CLOSEPOLY)
         verts.append(start_point)
