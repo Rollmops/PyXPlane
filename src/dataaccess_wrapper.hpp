@@ -3,6 +3,7 @@
 
 #include <XPLMDataAccess.h>
 #include <boost/python.hpp>
+#include <utility>
 
 #define GET_DATA(TYPE, SUFFIX) TYPE __XPLMGetData ## SUFFIX (PyObject *inDataRef) \
 {\
@@ -69,5 +70,49 @@ void __XPLMSetDatavi(PyObject *inDataRef, const boost::python::list &inValues, i
 void __XPLMSetDatavf(PyObject *inDataRef, const boost::python::list &inValues, int inOffset = 0, int inCount = -1);
 // TODO we assume that byte type returns always strings
 void __XPLMSetDatab(PyObject *inDataRef, const char *inValues, int inOffset = 0, int inCount = -1);
+
+PyObject *__XPLMRegisterDataAccessor(
+									const std::string         &inDataName,
+                                   XPLMDataTypeID       inDataType,
+                                   int                  inIsWritable,
+								   boost::python::object       inReadInt,
+								   boost::python::object       inWriteInt,
+								   boost::python::object       inReadFloat,
+								   boost::python::object       inWriteFloat,
+								   boost::python::object       inReadDouble,
+								   boost::python::object       inWriteDouble,
+								   boost::python::object      inReadIntArray,
+								   boost::python::object      inWriteIntArray,
+								   boost::python::object      inReadFloatArray,
+								   boost::python::object      inWriteFloatArray,
+								   boost::python::object       inReadData,
+								   boost::python::object       inWriteData,
+                                   PyObject *               inReadRefcon,
+                                   PyObject *               inWriteRefcon);
+
+
+#define NULL_OR_CALLBACK(CALLBACK) CALLBACK == boost::python::object() ? NULL : CALLBACK ## _callback
+
+struct DataAccessorCallbacks
+{
+	boost::python::object	inReadInt;
+	boost::python::object	inWriteInt;
+	boost::python::object	inReadFloat;
+	boost::python::object	inWriteFloat;
+	boost::python::object	inReadDouble;
+	boost::python::object	inWriteDouble;
+	boost::python::object	inReadIntArray;
+	boost::python::object	inWriteIntArray;
+	boost::python::object	inReadFloatArray;
+	boost::python::object	inWriteFloatArray;
+	boost::python::object	inReadData;
+	boost::python::object	inWriteData;
+};
+
+#define REGISTER_GETTER_CALLBACK(TYPE, NAME) TYPE NAME ## _callback ( void * inRefCon ) \
+{\
+	DataAccessorCallbacks &callback = callbackMap.at(inRefCon); \
+	return callback.NAME (PyCapsule_New(inRefCon, "XPLMDataRef", NULL)); \
+}
 
 #endif // _PYXPLANE_DATAACCESS_WRAPPER_HPP

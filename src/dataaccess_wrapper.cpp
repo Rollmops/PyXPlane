@@ -1,5 +1,7 @@
 #include "dataaccess_wrapper.hpp"
 
+#include <map>
+
 PyObject *__XPLMFindDataRef(const char *inDataRefName)
 {
 	XPLMDataRef dataRef = XPLMFindDataRef(inDataRefName);
@@ -51,4 +53,50 @@ void __XPLMSetDatab(PyObject *inDataRef, const char *inValue, int inOffset, int 
 {
 	const int _inMax = inMax == -1 ? strlen(inValue) : inMax;
 	XPLMSetDatab(PyCapsule_GetPointer(inDataRef, "XPLMDataRef"), (void*)inValue, inOffset, _inMax);
+}
+
+static std::map<XPLMDataRef, DataAccessorCallbacks> callbackMap;
+
+REGISTER_GETTER_CALLBACK(int, inReadInt);
+REGISTER_GETTER_CALLBACK(float, inReadFloat);
+REGISTER_GETTER_CALLBACK(double, inReadDouble);
+
+
+PyObject *__XPLMRegisterDataAccessor(
+                                   const std::string         &inDataName,
+                                   XPLMDataTypeID       inDataType,
+                                   int                  inIsWritable,
+								   boost::python::object       inReadInt,
+								   boost::python::object       inWriteInt,
+								   boost::python::object       inReadFloat,
+								   boost::python::object       inWriteFloat,
+								   boost::python::object       inReadDouble,
+								   boost::python::object       inWriteDouble,
+								   boost::python::object      inReadIntArray,
+								   boost::python::object      inWriteIntArray,
+								   boost::python::object      inReadFloatArray,
+								   boost::python::object      inWriteFloatArray,
+								   boost::python::object       inReadData,
+								   boost::python::object       inWriteData,
+                                   PyObject *               inReadRefcon,
+                                   PyObject *               inWriteRefcon)
+{
+	XPLMDataRef ref = XPLMRegisterDataAccessor(inDataName, inDataType, inIsWritable,
+			NULL_OR_CALLBACK(inReadInt),
+			NULL_OR_CALLBACK(inWriteInt),
+			NULL_OR_CALLBACK(inReadFloat),
+			NULL_OR_CALLBACK(inWriteFloat),
+			NULL_OR_CALLBACK(inReadDouble),
+			NULL_OR_CALLBACK(inWriteDouble),
+			NULL_OR_CALLBACK(inReadIntArray),
+			NULL_OR_CALLBACK(inWriteIntArray),
+			NULL_OR_CALLBACK(inReadFloatArray),
+			NULL_OR_CALLBACK(inWriteFloattArray),
+			NULL_OR_CALLBACK(inReadData),
+			NULL_OR_CALLBACK(inWriteData),
+			PyCapsule_GetPointer(inReadRefcon, "XPLMDataRef"),
+			PyCapsule_GetPointer(inWriteRefcon, "XPLMDataRef") );
+
+	DataAccessorCallbacks &callbacks = callbackMap[ref];
+
 }
