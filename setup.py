@@ -5,11 +5,9 @@ from xplane import __version__
 from plugins_build_command import PluginsBuildCommand
 
 BOOST_DIR = os.environ.get('BOOST_DIR', r'C:\SDK\boost_1_56_0')
-BOOST_LIBRARY_DIR = os.path.join(BOOST_DIR, 'stage', 'lib')
 
 XPLANE_SDK_DIR = os.environ.get('XPLANE_SDK_DIR', r'C:\SDK\XPlane')
 XPLANE_SDK_HEADER_DIR = os.path.join(XPLANE_SDK_DIR, 'CHeaders')
-XPLANE_SDK_LIBRARY_DIR = os.path.join(XPLANE_SDK_DIR, 'Libraries', 'Win')
 
 XPLANE_PLATFORM = 'IBM'
 PLUGIN_SCRIPTS_DIR_NAME = 'PyXPlane'
@@ -28,6 +26,7 @@ xplane_module = Extension('xplane.api',
                                            ('MS_WIN64', None),
                                            ('XPLM200', None),
                                            ('XPLM210', None),
+                                           ('BOOST_PYTHON_MAX_ARITY', '17'),
                                            ('__EXTENSION_VERSION__', __version__)
                                            ],
                           extra_compile_args=['-w', '-Wall'],

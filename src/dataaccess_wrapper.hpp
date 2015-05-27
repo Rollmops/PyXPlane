@@ -2,6 +2,7 @@
 #define _PYXPLANE_DATAACCESS_WRAPPER_HPP
 
 #include <XPLMDataAccess.h>
+
 #include <boost/python.hpp>
 #include <utility>
 
@@ -72,7 +73,7 @@ void __XPLMSetDatavf(PyObject *inDataRef, const boost::python::list &inValues, i
 void __XPLMSetDatab(PyObject *inDataRef, const char *inValues, int inOffset = 0, int inCount = -1);
 
 PyObject *__XPLMRegisterDataAccessor(
-									const std::string         &inDataName,
+									const char         *inDataName,
                                    XPLMDataTypeID       inDataType,
                                    int                  inIsWritable,
 								   boost::python::object       inReadInt,

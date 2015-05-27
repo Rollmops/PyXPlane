@@ -79,4 +79,6 @@ BOOST_PYTHON_MODULE(api)
 	def("XPLMSetDatavi", __XPLMSetDatavi);
 	def("XPLMSetDatavf", __XPLMSetDatavf);
 	def("XPLMSetDatab", __XPLMSetDatab);
+
+	def("XPLMRegisterDataAccessor", __XPLMRegisterDataAccessor);
 }
