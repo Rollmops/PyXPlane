@@ -92,6 +92,11 @@ PyObject *__XPLMRegisterDataAccessor(
                                    PyObject *               inWriteRefcon);
 
 
+#define DEFINE_GETTER_CALLBACK(NAME, TYPE) TYPE NAME ## _callback(XPLMDataRef refCon) \
+{ \
+	return boost::python::extract<TYPE>(callbackMap.at(refCon).NAME()); \
+}
+
 struct DataAccessorCallbacks
 {
 	boost::python::object	inReadInt;

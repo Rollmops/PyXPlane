@@ -57,10 +57,11 @@ void __XPLMSetDatab(PyObject *inDataRef, const char *inValue, int inOffset, int 
 
 static std::map<XPLMDataRef, DataAccessorCallbacks> callbackMap;
 
-int inReadInt_callback(XPLMDataRef refCon)
-{
-	return boost::python::extract<int>(callbackMap.at(refCon).inReadInt());
-}
+DEFINE_GETTER_CALLBACK(inReadInt, int);
+DEFINE_GETTER_CALLBACK(inReadFloat, float);
+DEFINE_GETTER_CALLBACK(inReadDouble, double);
+
+#define NONE_TO_NULL(NAME) NAME == boost::python::object() ? NULL : NAME ## _callback
 
 PyObject *__XPLMRegisterDataAccessor(
                                    const char *inDataName,
@@ -82,11 +83,11 @@ PyObject *__XPLMRegisterDataAccessor(
                                    PyObject *               inWriteRefcon)
 {
 	XPLMDataRef ref = XPLMRegisterDataAccessor(inDataName, inDataType, inIsWritable,
+			NONE_TO_NULL(inReadInt),
 			NULL,
+			NONE_TO_NULL(inReadFloat),
 			NULL,
-			NULL,
-			NULL,
-			NULL,
+			NONE_TO_NULL(inReadDouble),
 			NULL,
 			NULL,
 			NULL,
