@@ -7,6 +7,8 @@
 #include <utility>
 #include <iostream>
 
+#define NONE_TO_NULL(NAME) NAME == boost::python::object() ? NULL : NAME ## _callback
+
 #define GET_DATA(TYPE, SUFFIX) TYPE __XPLMGetData ## SUFFIX (PyObject *inDataRef) \
 {\
 	if( inDataRef != Py_None ) { \
@@ -58,6 +60,14 @@
 }
 
 
+#define READ_CALLBACK(NAME, TYPE) TYPE NAME ## _callback(void *index) \
+{ \
+	DataAccessorCallbacksStruct &callback = callbackMap.at(index); \
+	boost::python::object &refCon = refConReadMap.at(index); \
+	return boost::python::extract<TYPE>(callback.NAME(refCon)); \
+}
+
+
 PyObject *__XPLMFindDataRef(const char *inDataRefName);
 
 int __XPLMCanWriteDataRef(PyObject *inDataRef);
@@ -82,6 +92,23 @@ void __XPLMSetDatavf(PyObject *inDataRef, const boost::python::list &inValues, i
 // TODO we assume that byte type returns always strings
 void __XPLMSetDatab(PyObject *inDataRef, const char *inValues, int inOffset = 0, int inCount = -1);
 
+struct DataAccessorCallbacksStruct
+{
+	boost::python::object	inReadInt;
+	boost::python::object	inWriteInt;
+	boost::python::object	inReadFloat;
+	boost::python::object	inWriteFloat;
+	boost::python::object	inReadDouble;
+	boost::python::object	inWriteDouble;
+	boost::python::object	inReadIntArray;
+	boost::python::object	inWriteIntArray;
+	boost::python::object	inReadFloatArray;
+	boost::python::object	inWriteFloatArray;
+	boost::python::object	inReadData;
+	boost::python::object	inWriteData;
+};
+
+
 PyObject *__XPLMRegisterDataAccessor(
 									const char *inDataName,
 									const XPLMDataTypeID &inDataType,
@@ -102,21 +129,7 @@ PyObject *__XPLMRegisterDataAccessor(
 									const boost::python::object &inWriteRefCon
 								   );
 
-struct DataAccessorCallbacks
-{
-	boost::python::object	inReadInt;
-	boost::python::object	inWriteInt;
-	boost::python::object	inReadFloat;
-	boost::python::object	inWriteFloat;
-	boost::python::object	inReadDouble;
-	boost::python::object	inWriteDouble;
-	boost::python::object	inReadIntArray;
-	boost::python::object	inWriteIntArray;
-	boost::python::object	inReadFloatArray;
-	boost::python::object	inWriteFloatArray;
-	boost::python::object	inReadData;
-	boost::python::object	inWriteData;
-};
 
+void __XPLMUnregisterDataAccessor(PyObject *inDataRef);
 
 #endif // _PYXPLANE_DATAACCESS_WRAPPER_HPP

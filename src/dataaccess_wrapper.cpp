@@ -55,33 +55,13 @@ void __XPLMSetDatab(PyObject *inDataRef, const char *inValue, int inOffset, int 
 	XPLMSetDatab(PyCapsule_GetPointer(inDataRef, "XPLMDataRef"), (void*)inValue, inOffset, _inMax);
 }
 
-static std::map<void *, DataAccessorCallbacks> callbackMap;
+static std::map<void *, DataAccessorCallbacksStruct> callbackMap;
 static std::map<void *, boost::python::object> refConReadMap;
 static std::map<void *, boost::python::object> refConWriteMap;
 
-int inReadInt_callback(void *index)
-{
-	DataAccessorCallbacks &callback = callbackMap.at(index);
-	boost::python::object &refCon = refConReadMap.at(index);
-	return boost::python::extract<int>(callback.inReadInt(refCon));
-}
-
-
-float inReadFloat_callback(void *index)
-{
-	DataAccessorCallbacks &callback = callbackMap.at(index);
-	boost::python::object &refCon = refConReadMap.at(index);
-	return boost::python::extract<float>(callback.inReadFloat(refCon));
-}
-
-double inReadDouble_callback(void *index)
-{
-	DataAccessorCallbacks &callback = callbackMap.at(index);
-	boost::python::object &refCon = refConReadMap.at(index);
-	return boost::python::extract<double>(callback.inReadDouble(refCon));
-}
-
-#define NONE_TO_NULL(NAME) NAME == boost::python::object() ? NULL : NAME ## _callback
+READ_CALLBACK(inReadInt, int);
+READ_CALLBACK(inReadFloat, float);
+READ_CALLBACK(inReadDouble, double);
 
 PyObject *__XPLMRegisterDataAccessor(
 									const char *inDataName,
@@ -109,7 +89,7 @@ PyObject *__XPLMRegisterDataAccessor(
 
 	refConReadMap[indexPtr] = inReadRefCon;
 	refConWriteMap[indexPtr] = inWriteRefCon;
-	DataAccessorCallbacks &callbacks = callbackMap[indexPtr];
+	DataAccessorCallbacksStruct &callbacks = callbackMap[indexPtr];
 
 	XPLMDataRef ref = XPLMRegisterDataAccessor(inDataName, inDataType, inIsWritable,
 			NONE_TO_NULL(inReadInt), NULL,
@@ -127,4 +107,11 @@ PyObject *__XPLMRegisterDataAccessor(
 
 	PyObject *ret = PyCapsule_New(ref, "XPLMDataRef", NULL);
 	return ret;
+}
+
+void __XPLMUnregisterDataAccessor(PyObject *inDataRef)
+{
+	if( inDataRef != Py_None ) {
+		XPLMUnregisterDataAccessor(PyCapsule_GetPointer(inDataRef, "XPLMDataRef"));
+	}
 }

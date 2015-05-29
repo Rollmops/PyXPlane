@@ -80,5 +80,6 @@ BOOST_PYTHON_MODULE(api)
 	def("XPLMSetDatavf", __XPLMSetDatavf);
 	def("XPLMSetDatab", __XPLMSetDatab);
 
-	def("XPLMRegisterDataAccessor", __XPLMRegisterDataAccessor);
+	def("XPLMRegisterDataAccessor", __XPLMRegisterDataAccessor, XPLMRegisterDataAccessor_doc);
+	def("XPLMUnregisterDataAccessor", __XPLMUnregisterDataAccessor, XPLMUnregisterDataAccessor_doc);
 }
