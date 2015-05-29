@@ -42,5 +42,4 @@ def XPLMGetPluginInfo(pluginID):
                            'outDescription': info[3]
                            }) 
 
-
 app.run()

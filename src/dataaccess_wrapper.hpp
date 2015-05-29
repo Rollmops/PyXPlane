@@ -5,6 +5,7 @@
 
 #include <boost/python.hpp>
 #include <utility>
+#include <iostream>
 
 #define GET_DATA(TYPE, SUFFIX) TYPE __XPLMGetData ## SUFFIX (PyObject *inDataRef) \
 {\
@@ -76,24 +77,26 @@ PyObject *__XPLMRegisterDataAccessor(
 									const char         *inDataName,
                                    XPLMDataTypeID       inDataType,
                                    int                  inIsWritable,
-								   boost::python::object       inReadInt,
-								   boost::python::object       inWriteInt,
-								   boost::python::object       inReadFloat,
-								   boost::python::object       inWriteFloat,
-								   boost::python::object       inReadDouble,
-								   boost::python::object       inWriteDouble,
-								   boost::python::object      inReadIntArray,
-								   boost::python::object      inWriteIntArray,
-								   boost::python::object      inReadFloatArray,
-								   boost::python::object      inWriteFloatArray,
-								   boost::python::object       inReadData,
-								   boost::python::object       inWriteData,
-                                   PyObject *               inReadRefcon,
-                                   PyObject *               inWriteRefcon);
+								   const boost::python::object &inReadInt,
+								   const boost::python::object &inWriteInt,
+								   const boost::python::object &inReadFloat,
+								   const boost::python::object &inWriteFloat,
+								   const boost::python::object &inReadDouble,
+								   const boost::python::object &inWriteDouble,
+								   const boost::python::object &inReadIntArray,
+								   const boost::python::object &inWriteIntArray,
+								   const boost::python::object &inReadFloatArray,
+								   const boost::python::object &inWriteFloatArray,
+								   const boost::python::object &inReadData,
+								   const boost::python::object &inWriteData,
+                                   const boost::python::object	&inReadRefCon,
+								   const boost::python::object	&inWriteRefCon
+								   );
 
 
 #define DEFINE_GETTER_CALLBACK(NAME, TYPE) TYPE NAME ## _callback(XPLMDataRef refCon) \
 { \
+	std::cout << "callback: " << refCon << std::endl; \
 	return boost::python::extract<TYPE>(callbackMap.at(refCon).NAME()); \
 }
 
