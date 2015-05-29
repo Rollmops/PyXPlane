@@ -17,7 +17,9 @@
 
 #define SET_DATA(TYPE, SUFFIX) void __XPLMSetData ## SUFFIX (PyObject *inDataRef, TYPE inValue) \
 { \
-	XPLMSetData ## SUFFIX (PyCapsule_GetPointer(inDataRef, "XPLMDataRef"), inValue); \
+	if( inDataRef != Py_None ) { \
+		XPLMSetData ## SUFFIX (PyCapsule_GetPointer(inDataRef, "XPLMDataRef"), inValue); \
+	} \
 }
 
 #define GET_DATA_VECTOR(TYPE, SUFFIX) boost::python::list __XPLMGetDatav ## SUFFIX (PyObject *inDataRef, int inOffset, int inMax) \
