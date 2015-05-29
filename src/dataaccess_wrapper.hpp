@@ -9,7 +9,10 @@
 
 #define GET_DATA(TYPE, SUFFIX) TYPE __XPLMGetData ## SUFFIX (PyObject *inDataRef) \
 {\
-	return XPLMGetData ##  SUFFIX (PyCapsule_GetPointer(inDataRef, "XPLMDataRef")); \
+	if( inDataRef != Py_None ) { \
+		return XPLMGetData ##  SUFFIX (PyCapsule_GetPointer(inDataRef, "XPLMDataRef")); \
+	} \
+	return 0; \
 }
 
 #define SET_DATA(TYPE, SUFFIX) void __XPLMSetData ## SUFFIX (PyObject *inDataRef, TYPE inValue) \
@@ -21,8 +24,12 @@
 { \
 	TYPE *outValues; \
 	boost::python::list retList; \
-	XPLMDataRef _inDataRef = PyCapsule_GetPointer(inDataRef, "XPLMDataRef"); \
-	\
+	XPLMDataRef _inDataRef = NULL; \
+	if (inDataRef != Py_None ) { \
+		_inDataRef = PyCapsule_GetPointer(inDataRef, "XPLMDataRef"); \
+	} else { \
+		return retList; \
+	}\
 	if( inMax == -1 ) { \
 		inMax = XPLMGetDatav ## SUFFIX (_inDataRef, NULL, 0, 0); \
 	} \
@@ -89,16 +96,9 @@ PyObject *__XPLMRegisterDataAccessor(
 								   const boost::python::object &inWriteFloatArray,
 								   const boost::python::object &inReadData,
 								   const boost::python::object &inWriteData,
-                                   const boost::python::object	&inReadRefCon,
-								   const boost::python::object	&inWriteRefCon
+                                   const boost::python::object &inReadRefCon,
+								   const boost::python::object &inWriteRefCon
 								   );
-
-
-#define DEFINE_GETTER_CALLBACK(NAME, TYPE) TYPE NAME ## _callback(XPLMDataRef refCon) \
-{ \
-	std::cout << "callback: " << refCon << std::endl; \
-	return boost::python::extract<TYPE>(callbackMap.at(refCon).NAME()); \
-}
 
 struct DataAccessorCallbacks
 {
