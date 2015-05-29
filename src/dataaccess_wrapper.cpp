@@ -81,27 +81,26 @@ double inReadDouble_callback(void *index)
 	return boost::python::extract<double>(callback.inReadDouble(refCon));
 }
 
-
 #define NONE_TO_NULL(NAME) NAME == boost::python::object() ? NULL : NAME ## _callback
 
 PyObject *__XPLMRegisterDataAccessor(
-                                   const char *inDataName,
-                                   XPLMDataTypeID       inDataType,
-                                   int                  inIsWritable,
-								   const boost::python::object &inReadInt,
-								   const boost::python::object &inWriteInt,
-								   const boost::python::object &inReadFloat,
-								   const boost::python::object &inWriteFloat,
-								   const boost::python::object &inReadDouble,
-								   const boost::python::object &inWriteDouble,
-								   const boost::python::object &inReadIntArray,
-								   const boost::python::object &inWriteIntArray,
-								   const boost::python::object &inReadFloatArray,
-								   const boost::python::object &inWriteFloatArray,
-								   const boost::python::object &inReadData,
-								   const boost::python::object &inWriteData,
-                                   const boost::python::object &inReadRefCon,
-								   const boost::python::object &inWriteRefCon
+									const char *inDataName,
+									const XPLMDataTypeID &inDataType,
+									const int &inIsWritable,
+									const boost::python::object &inReadInt,
+									const boost::python::object &inWriteInt,
+									const boost::python::object &inReadFloat,
+									const boost::python::object &inWriteFloat,
+									const boost::python::object &inReadDouble,
+									const boost::python::object &inWriteDouble,
+									const boost::python::object &inReadIntArray,
+									const boost::python::object &inWriteIntArray,
+									const boost::python::object &inReadFloatArray,
+									const boost::python::object &inWriteFloatArray,
+									const boost::python::object &inReadData,
+									const boost::python::object &inWriteData,
+									const boost::python::object &inReadRefCon,
+									const boost::python::object &inWriteRefCon
 								   )
 {
 // TODO use shared_ptr
