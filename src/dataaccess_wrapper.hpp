@@ -132,4 +132,15 @@ PyObject *__XPLMRegisterDataAccessor(
 
 void __XPLMUnregisterDataAccessor(PyObject *inDataRef);
 
+int __XPLMShareData(	const char *inDataName,
+						const XPLMDataTypeID &inDataTyp,
+						const boost::python::object &inNotificationFunc,
+						const boost::python::object &inNotificationRefcon);
+
+int __XPLMUnshareData(	const char *inDataName,
+        				const XPLMDataTypeID &inDataType,
+						const boost::python::object &inNotificationFunc,
+        				const boost::python::object &inNotificationRefcon);
+
+
 #endif // _PYXPLANE_DATAACCESS_WRAPPER_HPP

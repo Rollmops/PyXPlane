@@ -83,9 +83,7 @@ PyObject *__XPLMRegisterDataAccessor(
 									const boost::python::object &inWriteRefCon
 								   )
 {
-// TODO use shared_ptr
-	static unsigned int index = 0;
-	void* indexPtr = (void*)(new unsigned int(index++));
+	void* indexPtr = (void*)(inDataName);
 
 	refConReadMap[indexPtr] = inReadRefCon;
 	refConWriteMap[indexPtr] = inWriteRefCon;
@@ -115,3 +113,44 @@ void __XPLMUnregisterDataAccessor(PyObject *inDataRef)
 		XPLMUnregisterDataAccessor(PyCapsule_GetPointer(inDataRef, "XPLMDataRef"));
 	}
 }
+
+static std::map<void*, boost::python::object> sharedDataCallbacks;
+static std::map<void*, boost::python::object> sharedDataRefCons;
+
+void XPLMDataChanged_callback(void *inRefcon)
+{
+	boost::python::object &callback = sharedDataCallbacks.at(inRefcon);
+	boost::python::object &refCon = sharedDataRefCons.at(inRefcon);
+	callback(refCon);
+}
+
+int __XPLMShareData(	const char *inDataName,
+						const XPLMDataTypeID &inDataType,
+						const boost::python::object &inNotificationFunc,
+						const boost::python::object &inNotificationRefcon)
+{
+	void *index = (void*)inDataName;
+	sharedDataCallbacks[index] = inNotificationFunc;
+	sharedDataRefCons[index] = inNotificationRefcon;
+
+	const int ret =XPLMShareData(	inDataName,
+									inDataType,
+									inNotificationFunc.ptr() == Py_None ? NULL : XPLMDataChanged_callback,
+									inNotificationRefcon.ptr() == Py_None ? NULL : PyCapsule_GetPointer(inNotificationRefcon.ptr(), "XPLMDataRef"));
+
+	return ret;
+}
+
+int __XPLMUnshareData(	const char *inDataName,
+        				const XPLMDataTypeID &inDataType,
+						const boost::python::object &inNotificationFunc,
+        				const boost::python::object &inNotificationRefcon)
+{
+	const int ret = XPLMUnshareData(inDataName,
+									inDataType,
+									inNotificationFunc.ptr() == Py_None ? NULL : XPLMDataChanged_callback,
+									inNotificationRefcon.ptr() == Py_None ? NULL : PyCapsule_GetPointer(inNotificationRefcon.ptr(), "XPLMDataRef")
+									);
+	return ret;
+}
+

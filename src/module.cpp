@@ -82,4 +82,7 @@ BOOST_PYTHON_MODULE(api)
 
 	def("XPLMRegisterDataAccessor", __XPLMRegisterDataAccessor, XPLMRegisterDataAccessor_doc);
 	def("XPLMUnregisterDataAccessor", __XPLMUnregisterDataAccessor, XPLMUnregisterDataAccessor_doc);
+
+	def("XPLMShareData", __XPLMShareData, XPLMShareData_doc);
+	def("XPLMUnshareData", __XPLMUnshareData, XPLMUnshareData_doc);
 }

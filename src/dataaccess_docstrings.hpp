@@ -41,3 +41,16 @@ const char *XPLMUnregisterDataAccessor_doc = 	"Use this routine to unregister an
 												"Once you unregister a data ref, your function pointer will not be called anymore."
 												"For maximum compatibility, do not unregister your data accessors until final shutdown (when your XPluginStop routine is called)."
 												"This allows other plugins to find your data reference once and use it for their entire time of operation.";
+
+const char *XPLMShareData_doc = "This routine connects a plug-in to shared data, creating the shared data if necessary."
+							"inDataName is a standard path for the data ref, and inDataType specifies the type."
+							"This function will create the data if it does not exist. If the data already exists but the type does not match,"
+							"an error is returned, so it is important that plug-in authors collaborate to establish public standards for shared data."
+							"If a notificationFunc is passed in and is not NULL, that notification function will be called whenever the data is modified."
+							"The notification refcon will be passed to it. "
+							"This allows your plug-in to know which shared data was changed if multiple shared data are handled by one callback,"
+							"or if the plug-in does not use global variables."
+							"A one is returned for successfully creating or finding the shared data; a zero if the data already exists but is of the wrong type.";
+
+const char *XPLMUnshareData_doc = "This routine removes your notification function for shared data. Call it when done with the data to stop receiving change notifications."
+								  "Arguments must match XPLMShareData. The actual memory will not necessarily be freed, since other plug-ins could be using it.";
