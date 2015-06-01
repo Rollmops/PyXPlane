@@ -67,6 +67,13 @@
 	return boost::python::extract<TYPE>(callback.NAME(refCon)); \
 }
 
+#define WRITE_CALLBACK(NAME, TYPE) void NAME ## _callback(void *index, TYPE value) \
+{ \
+	DataAccessorCallbacksStruct &callback = callbackMap.at(index); \
+	boost::python::object &refCon = refConWriteMap.at(index); \
+	callback.NAME(refCon, value); \
+}
+
 
 PyObject *__XPLMFindDataRef(const char *inDataRefName);
 
@@ -75,7 +82,7 @@ int __XPLMCanWriteDataRef(PyObject *inDataRef);
 XPLMDataTypeID __XPLMGetDataRefTypes(PyObject *inDataRef);
 
 int __XPLMGetDatai(PyObject *inDataRef);
-float __XPLMGetDataf(PyObject *inDataRef);
+double __XPLMGetDataf(PyObject *inDataRef);
 double __XPLMGetDatad(PyObject *inDataRef);
 
 void __XPLMSetDatai(PyObject *inDataRef, int inValue);

@@ -1,5 +1,4 @@
 #include "dataaccess_wrapper.hpp"
-
 #include <map>
 
 PyObject *__XPLMFindDataRef(const char *inDataRefName)
@@ -11,6 +10,7 @@ PyObject *__XPLMFindDataRef(const char *inDataRefName)
 		Py_RETURN_NONE;
 	}
 }
+
 
 int __XPLMCanWriteDataRef(PyObject *inDataRef)
 {
@@ -24,7 +24,7 @@ XPLMDataTypeID __XPLMGetDataRefTypes(PyObject *inDataRef)
 }
 
 GET_DATA(int, i);
-GET_DATA(float, f);
+GET_DATA(double, f);
 GET_DATA(double, d);
 
 SET_DATA(int, i);
@@ -63,6 +63,10 @@ READ_CALLBACK(inReadInt, int);
 READ_CALLBACK(inReadFloat, float);
 READ_CALLBACK(inReadDouble, double);
 
+WRITE_CALLBACK(inWriteInt, int);
+WRITE_CALLBACK(inWriteFloat, float);
+WRITE_CALLBACK(inWriteDouble, double);
+
 PyObject *__XPLMRegisterDataAccessor(
 									const char *inDataName,
 									const XPLMDataTypeID &inDataType,
@@ -83,16 +87,19 @@ PyObject *__XPLMRegisterDataAccessor(
 									const boost::python::object &inWriteRefCon
 								   )
 {
-	void* indexPtr = (void*)(inDataName);
+	if (inReadFloat.ptr() != Py_None ) {
+		std::cerr << "!! Warning: It is not recommended to use the float callback read in XPLMRegisterDataAccessor function !!" << std::endl;
+	}
+	void* indexPtr = (void*)inDataName;
 
 	refConReadMap[indexPtr] = inReadRefCon;
 	refConWriteMap[indexPtr] = inWriteRefCon;
 	DataAccessorCallbacksStruct &callbacks = callbackMap[indexPtr];
 
 	XPLMDataRef ref = XPLMRegisterDataAccessor(inDataName, inDataType, inIsWritable,
-			NONE_TO_NULL(inReadInt), NULL,
-			NONE_TO_NULL(inReadFloat), NULL,
-			NONE_TO_NULL(inReadDouble), NULL,
+			NONE_TO_NULL(inReadInt), NONE_TO_NULL(inWriteInt),
+			NONE_TO_NULL(inReadFloat), NONE_TO_NULL(inWriteFloat),
+			NONE_TO_NULL(inReadDouble), NONE_TO_NULL(inWriteDouble),
 			NULL, NULL,
 			NULL, NULL,
 			NULL, NULL,
@@ -100,8 +107,11 @@ PyObject *__XPLMRegisterDataAccessor(
 			indexPtr);
 
 	callbacks.inReadInt = inReadInt;
+	callbacks.inWriteInt = inWriteInt;
 	callbacks.inReadFloat = inReadFloat;
+	callbacks.inWriteFloat = inWriteFloat;
 	callbacks.inReadDouble = inReadDouble;
+	callbacks.inWriteDouble = inWriteDouble;
 
 	PyObject *ret = PyCapsule_New(ref, "XPLMDataRef", NULL);
 	return ret;
@@ -113,6 +123,10 @@ void __XPLMUnregisterDataAccessor(PyObject *inDataRef)
 		XPLMUnregisterDataAccessor(PyCapsule_GetPointer(inDataRef, "XPLMDataRef"));
 	}
 }
+
+/***************************************************************************************
+ * 						Data sharing
+ ***************************************************************************************/
 
 static std::map<void*, boost::python::object> sharedDataCallbacks;
 static std::map<void*, boost::python::object> sharedDataRefCons;

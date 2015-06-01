@@ -3,15 +3,17 @@
 
 #include "plugin_wrapper.hpp"
 #include "dataaccess_wrapper.hpp"
+#include "processing_wrapper.hpp"
 
 #include "plugin_docstrings.hpp"
 #include "dataaccess_docstrings.hpp"
+
+#include "converter.hpp"
 
 using namespace boost::python;
 
 BOOST_PYTHON_MODULE(api)
 {
-
 	scope().attr("__version__") = std::string(xstr(__EXTENSION_VERSION__));
 
 	/***********************************************************************
@@ -48,7 +50,7 @@ BOOST_PYTHON_MODULE(api)
 	def("XPLMEnumerateFeatures", __XPLMEnumerateFeatures, __XPLMEnumerateFeatures_overloads(args("inEnumerator", "inRef"), XPLMEnumerateFeatures_doc));
 
 	/***********************************************************************
-	 *						XPLMDataRef
+	 *						XPLMDataAccess
 	 ***********************************************************************/
 
 	SCOPE_ATTR(xplmType_Unknown);
@@ -85,4 +87,13 @@ BOOST_PYTHON_MODULE(api)
 
 	def("XPLMShareData", __XPLMShareData, XPLMShareData_doc);
 	def("XPLMUnshareData", __XPLMUnshareData, XPLMUnshareData_doc);
+
+	/***********************************************************************
+	 *						XPLMProcessing
+	 ***********************************************************************/
+
+	SCOPE_ATTR(xplm_FlightLoop_Phase_BeforeFlightModel);
+	SCOPE_ATTR(xplm_FlightLoop_Phase_AfterFlightModel);
+
+	class_<XPLMCreateFlightLoop_t>("XPLMCreateFlightLoop_t");
 }
