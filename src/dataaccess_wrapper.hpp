@@ -77,6 +77,22 @@
 	callback.NAME(refCon, value); \
 }
 
+#define READ_ARRAY_CALLBACK(NAME, TYPE) int NAME ## _callback(void *indexPtr, TYPE *outValues, int inOffset, int inMax) \
+{ \
+	const boost::python::object &refCon = refConReadMap.at(indexPtr); \
+	const boost::python::object &callback = callbackMap.at(indexPtr).NAME; \
+	boost::python::list retList = boost::python::extract<boost::python::list>(callback(refCon)); \
+	const boost::python::ssize_t n = boost::python::len(retList); \
+	if( outValues == NULL ) { \
+		return n; \
+	} \
+	const int minLength = std::min(inMax, static_cast<int>(n)); \
+	for(boost::python::ssize_t i=inOffset;i < minLength;++i) { \
+		boost::python::object elem = retList[i]; \
+		outValues[i] = boost::python::extract<TYPE>(elem); \
+	} \
+	return n; \
+}
 
 PyObject *__XPLMFindDataRef(const char *inDataRefName);
 
@@ -141,23 +157,6 @@ PyObject *__XPLMRegisterDataAccessor(
 									const boost::python::object &inReadRefCon,
 									const boost::python::object &inWriteRefCon
 								   );
-
-#define READ_ARRAY_CALLBACK(NAME, TYPE) int NAME ## _callback(void *indexPtr, TYPE *outValues, int inOffset, int inMax) \
-{ \
-	const boost::python::object &refCon = refConReadMap.at(indexPtr); \
-	const boost::python::object &callback = callbackMap.at(indexPtr).NAME; \
-	boost::python::list retList = boost::python::extract<boost::python::list>(callback(refCon)); \
-	const boost::python::ssize_t n = boost::python::len(retList); \
-	if( outValues == NULL ) { \
-		return n; \
-	} \
-	const int minLength = std::min(inMax, static_cast<int>(n)); \
-	for(boost::python::ssize_t i=inOffset;i < minLength;++i) { \
-		boost::python::object elem = retList[i]; \
-		outValues[i] = boost::python::extract<TYPE>(elem); \
-	} \
-	return n; \
-}
 
 
 void __XPLMUnregisterDataAccessor(PyObject *inDataRef);
