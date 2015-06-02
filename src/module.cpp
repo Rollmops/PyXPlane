@@ -57,8 +57,8 @@ BOOST_PYTHON_MODULE(api)
 	SCOPE_ATTR(xplmType_Int);
 	SCOPE_ATTR(xplmType_Float);
 	SCOPE_ATTR(xplmType_Double);
-	SCOPE_ATTR(xplmType_FloatArray);
 	SCOPE_ATTR(xplmType_IntArray);
+	SCOPE_ATTR(xplmType_FloatArray);
 	SCOPE_ATTR(xplmType_Data);
 
 	def("XPLMFindDataRef", __XPLMFindDataRef, XPLMFindDataRef_doc);
@@ -74,8 +74,8 @@ BOOST_PYTHON_MODULE(api)
 	def("XPLMSetDataf", __XPLMSetDataf, XPLMSetDataf_doc);
 	def("XPLMSetDatad", __XPLMSetDatad, XPLMSetDatad_doc);
 
-	def("XPLMGetDatavi", __XPLMGetDatavi);
-	def("XPLMGetDatavf", __XPLMGetDatavf);
+	def("XPLMGetDatavi", __XPLMGetDatavi, __XPLMGetDatavi_overloads(args("inDataRef", "inOffset", "inMax")));
+	def("XPLMGetDatavf", __XPLMGetDatavf, __XPLMGetDatavf_overloads(args("inDataRef", "inOffset", "inMax")));
 	def("XPLMGetDatab", __XPLMGetDatab);
 
 	def("XPLMSetDatavi", __XPLMSetDatavi);

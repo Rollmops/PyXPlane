@@ -6,6 +6,7 @@
 #include <boost/python.hpp>
 #include <utility>
 #include <iostream>
+#include <algorithm>
 
 #define NONE_TO_NULL(NAME) NAME == boost::python::object() ? NULL : NAME ## _callback
 
@@ -37,11 +38,13 @@
 	if( inMax == -1 ) { \
 		inMax = XPLMGetDatav ## SUFFIX (_inDataRef, NULL, 0, 0); \
 	} \
-	XPLMGetDatav ## SUFFIX (_inDataRef, outValues, inOffset, inMax); \
+	outValues = new TYPE[inMax - inOffset]; \
+	const int n = XPLMGetDatav ## SUFFIX (_inDataRef, outValues, inOffset, inMax); \
 	\
-	for(unsigned int i = 0; i < inMax; ++i) { \
+	for(unsigned int i = inOffset; i < n; ++i) { \
 		retList.append(outValues[i]); \
 	} \
+	delete[] outValues; \
 	return retList; \
 }
 
@@ -62,15 +65,15 @@
 
 #define READ_CALLBACK(NAME, TYPE) TYPE NAME ## _callback(void *index) \
 { \
-	DataAccessorCallbacksStruct &callback = callbackMap.at(index); \
-	boost::python::object &refCon = refConReadMap.at(index); \
+	const DataAccessorCallbacksStruct &callback = callbackMap.at(index); \
+	const boost::python::object &refCon = refConReadMap.at(index); \
 	return boost::python::extract<TYPE>(callback.NAME(refCon)); \
 }
 
 #define WRITE_CALLBACK(NAME, TYPE) void NAME ## _callback(void *index, TYPE value) \
 { \
-	DataAccessorCallbacksStruct &callback = callbackMap.at(index); \
-	boost::python::object &refCon = refConWriteMap.at(index); \
+	const DataAccessorCallbacksStruct &callback = callbackMap.at(index); \
+	const boost::python::object &refCon = refConWriteMap.at(index); \
 	callback.NAME(refCon, value); \
 }
 
@@ -90,7 +93,10 @@ void __XPLMSetDataf(PyObject *inDataRef, float inValue);
 void __XPLMSetDatad(PyObject *inDataRef, double inValue);
 
 boost::python::list __XPLMGetDatavi (PyObject *inDataRef, int inOffset = 0, int inMax = -1);
+BOOST_PYTHON_FUNCTION_OVERLOADS(__XPLMGetDatavi_overloads, __XPLMGetDatavi, 1, 3);
 boost::python::list __XPLMGetDatavf (PyObject *inDataRef, int inOffset = 0, int inMax = -1);
+BOOST_PYTHON_FUNCTION_OVERLOADS(__XPLMGetDatavf_overloads, __XPLMGetDatavf, 1, 3);
+
 // TODO we assume that byte type returns always strings
 std::string __XPLMGetDatab(PyObject *inDataRef, int inOffset = 0, int inMax = -1 );
 
@@ -135,6 +141,23 @@ PyObject *__XPLMRegisterDataAccessor(
 									const boost::python::object &inReadRefCon,
 									const boost::python::object &inWriteRefCon
 								   );
+
+#define READ_ARRAY_CALLBACK(NAME, TYPE) int NAME ## _callback(void *indexPtr, TYPE *outValues, int inOffset, int inMax) \
+{ \
+	const boost::python::object &refCon = refConReadMap.at(indexPtr); \
+	const boost::python::object &callback = callbackMap.at(indexPtr).NAME; \
+	boost::python::list retList = boost::python::extract<boost::python::list>(callback(refCon)); \
+	const boost::python::ssize_t n = boost::python::len(retList); \
+	if( outValues == NULL ) { \
+		return n; \
+	} \
+	const int minLength = std::min(inMax, static_cast<int>(n)); \
+	for(boost::python::ssize_t i=inOffset;i < minLength;++i) { \
+		boost::python::object elem = retList[i]; \
+		outValues[i] = boost::python::extract<TYPE>(elem); \
+	} \
+	return n; \
+}
 
 
 void __XPLMUnregisterDataAccessor(PyObject *inDataRef);

@@ -1,5 +1,6 @@
 #include "dataaccess_wrapper.hpp"
 #include <map>
+#include <stdlib.h>
 
 PyObject *__XPLMFindDataRef(const char *inDataRefName)
 {
@@ -67,6 +68,9 @@ WRITE_CALLBACK(inWriteInt, int);
 WRITE_CALLBACK(inWriteFloat, float);
 WRITE_CALLBACK(inWriteDouble, double);
 
+READ_ARRAY_CALLBACK(inReadIntArray, int);
+READ_ARRAY_CALLBACK(inReadFloatArray, float);
+
 PyObject *__XPLMRegisterDataAccessor(
 									const char *inDataName,
 									const XPLMDataTypeID &inDataType,
@@ -100,8 +104,8 @@ PyObject *__XPLMRegisterDataAccessor(
 			NONE_TO_NULL(inReadInt), NONE_TO_NULL(inWriteInt),
 			NONE_TO_NULL(inReadFloat), NONE_TO_NULL(inWriteFloat),
 			NONE_TO_NULL(inReadDouble), NONE_TO_NULL(inWriteDouble),
-			NULL, NULL,
-			NULL, NULL,
+			NONE_TO_NULL(inReadIntArray), NULL,
+			NONE_TO_NULL(inReadFloatArray), NULL,
 			NULL, NULL,
 			indexPtr,
 			indexPtr);
@@ -112,6 +116,8 @@ PyObject *__XPLMRegisterDataAccessor(
 	callbacks.inWriteFloat = inWriteFloat;
 	callbacks.inReadDouble = inReadDouble;
 	callbacks.inWriteDouble = inWriteDouble;
+	callbacks.inReadIntArray = inReadIntArray;
+	callbacks.inReadFloatArray = inReadFloatArray;
 
 	PyObject *ret = PyCapsule_New(ref, "XPLMDataRef", NULL);
 	return ret;
