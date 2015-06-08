@@ -94,6 +94,19 @@
 	return n; \
 }
 
+#define WRITE_ARRAY_CALLBACK(NAME, TYPE) void NAME ## _callback(void *index, TYPE *inValues, int inOffset, int inMax) \
+{ \
+	const DataAccessorCallbacksStruct &callback = callbackMap.at(index); \
+	const boost::python::object &refCon = refConWriteMap.at(index); \
+\
+	boost::python::list writeList; \
+	for(unsigned int i=0;i<inMax;++i) { \
+		writeList.append(inValues[i]); \
+	} \
+\
+	callback.inWriteIntArray(refCon, writeList, inOffset, inMax); \
+}
+
 PyObject *__XPLMFindDataRef(const char *inDataRefName);
 
 int __XPLMCanWriteDataRef(PyObject *inDataRef);
@@ -117,9 +130,13 @@ BOOST_PYTHON_FUNCTION_OVERLOADS(__XPLMGetDatavf_overloads, __XPLMGetDatavf, 1, 3
 std::string __XPLMGetDatab(PyObject *inDataRef, int inOffset = 0, int inMax = -1 );
 
 void __XPLMSetDatavi(PyObject *inDataRef, const boost::python::list &inValues, int inOffset = 0, int inCount = -1);
+BOOST_PYTHON_FUNCTION_OVERLOADS(__XPLMSetDatavi_overloads, __XPLMSetDatavi, 2, 4);
 void __XPLMSetDatavf(PyObject *inDataRef, const boost::python::list &inValues, int inOffset = 0, int inCount = -1);
+BOOST_PYTHON_FUNCTION_OVERLOADS(__XPLMSetDatavf_overloads, __XPLMSetDatavf, 2, 4);
+
 // TODO we assume that byte type returns always strings
 void __XPLMSetDatab(PyObject *inDataRef, const char *inValues, int inOffset = 0, int inCount = -1);
+BOOST_PYTHON_FUNCTION_OVERLOADS(__XPLMSetDatab_overloads, __XPLMSetDatab, 2, 4);
 
 struct DataAccessorCallbacksStruct
 {

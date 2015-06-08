@@ -76,9 +76,9 @@ BOOST_PYTHON_MODULE(api)
 	def("XPLMGetDatavf", __XPLMGetDatavf, __XPLMGetDatavf_overloads(args("inDataRef", "inOffset", "inMax")));
 	def("XPLMGetDatab", __XPLMGetDatab);
 
-	def("XPLMSetDatavi", __XPLMSetDatavi);
-	def("XPLMSetDatavf", __XPLMSetDatavf);
-	def("XPLMSetDatab", __XPLMSetDatab);
+	def("XPLMSetDatavi", __XPLMSetDatavi, __XPLMSetDatavi_overloads(args("inDataRef", "inValues", "inOffset", "inMax")));
+	def("XPLMSetDatavf", __XPLMSetDatavf, __XPLMSetDatavf_overloads(args("inDataRef", "inValues", "inOffset", "inMax")));
+	def("XPLMSetDatab", __XPLMSetDatab, __XPLMSetDatab_overloads(args("inDataRef", "inValues", "inOffset", "inMax")));
 
 	def("XPLMRegisterDataAccessor", __XPLMRegisterDataAccessor, XPLMRegisterDataAccessor_doc);
 	def("XPLMUnregisterDataAccessor", __XPLMUnregisterDataAccessor, XPLMUnregisterDataAccessor_doc);

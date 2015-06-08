@@ -71,6 +71,9 @@ WRITE_CALLBACK(inWriteDouble, double);
 READ_ARRAY_CALLBACK(inReadIntArray, int);
 READ_ARRAY_CALLBACK(inReadFloatArray, float);
 
+WRITE_ARRAY_CALLBACK(inWriteIntArray, int);
+WRITE_ARRAY_CALLBACK(inWriteFloatArray, float);
+
 PyObject *__XPLMRegisterDataAccessor(
 									const char *inDataName,
 									const XPLMDataTypeID &inDataType,
@@ -104,8 +107,8 @@ PyObject *__XPLMRegisterDataAccessor(
 			NONE_TO_NULL(inReadInt), NONE_TO_NULL(inWriteInt),
 			NONE_TO_NULL(inReadFloat), NONE_TO_NULL(inWriteFloat),
 			NONE_TO_NULL(inReadDouble), NONE_TO_NULL(inWriteDouble),
-			NONE_TO_NULL(inReadIntArray), NULL,
-			NONE_TO_NULL(inReadFloatArray), NULL,
+			NONE_TO_NULL(inReadIntArray), NONE_TO_NULL(inWriteIntArray),
+			NONE_TO_NULL(inReadFloatArray), NONE_TO_NULL(inWriteFloatArray),
 			NULL, NULL,
 			indexPtr,
 			indexPtr);
@@ -118,6 +121,8 @@ PyObject *__XPLMRegisterDataAccessor(
 	callbacks.inWriteDouble = inWriteDouble;
 	callbacks.inReadIntArray = inReadIntArray;
 	callbacks.inReadFloatArray = inReadFloatArray;
+	callbacks.inWriteIntArray = inWriteIntArray;
+	callbacks.inWriteFloatArray = inWriteFloatArray;
 
 	PyObject *ret = PyCapsule_New(ref, "XPLMDataRef", NULL);
 	return ret;
