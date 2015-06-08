@@ -43,8 +43,7 @@ setup(name='xplane',
       ext_modules=[xplane_module],
       data_files=[('xplane', glob.glob('lib/*.dll'))],
       zip_safe=False,
-      install_requires=['flask',
-                        'matplotlib'],
+      install_requires=['flask'],
       cmdclass = {'plugins': PluginsBuildCommand }
       )
 
